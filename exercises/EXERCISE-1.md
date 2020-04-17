@@ -161,9 +161,3 @@ const getCollection = async (req, res) => {
 ```
 
 7. You should now be able to retrieve the data from that collection. w00t!
-
----
-
-## Exercise 3 - Hello World!
-
-Create a script that will migrate our data from the json file to a database called greeting
