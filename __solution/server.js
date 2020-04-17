@@ -14,7 +14,7 @@ express()
   .use(express.urlencoded({ extended: false }))
   .use('/', express.static(__dirname + '/'))
 
-  .get('/ex-2/:dbName/:collection', getCollection)
+  .get('/ex-1/:dbName/:collection', getCollection)
 
   // handle 404s
   .use((req, res) => {

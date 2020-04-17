@@ -1,4 +1,4 @@
-# Exercises
+# Exercise 1
 
 Before we start the exercises, let's confirm that there is nothing on our mongo server. Type following in the terminal that is connected to the mongo server:
 
@@ -18,9 +18,9 @@ Once we start creating databases, they will appear in this list!
 
 ---
 
-## Exercise 1 - Connect to Mongo and create a database.
+## Exercise 1.1 - Connect to Mongo and create a database.
 
-1. Inside of `📁 exercises`, create a file called `exercise-1.js`
+1. Inside of `📁 exercises`, create a file called `exercise-1-1.js`
 2. Next, we need to write some code that will connect us to the mongo database server.
 3. We need to require the MongoClient like so at the top of the file.
 
@@ -114,11 +114,11 @@ For reference: [MongoDB CRUD Documentation](http://mongodb.github.io/node-mongod
 
 ---
 
-## Exercise 2 - Read the data
+## Exercise 1.2 - Read the data
 
 Let's print out all of the data in the collection to the console.
 
-1. Create a file called `exercise-2.js`
+1. Create a file called `exercise-1-2.js`
 2. You will need to replicate steps 1 to 4 from exercise 1 (require the `MongoClient` and declare the `client`)
 3. Create a function that will return all of the data in the collection. We need to pass it `req`, `res`.
 
@@ -131,12 +131,12 @@ const getCollection = async (req, res) => {
 4. Create an endpoint in `server.js` that we can use to connect view the data. The endpoint should have 2 url params: `dbName` and `collection`. _Don't forget to require the function._
 
 ```js
-.get('/ex-2/......', getCollection)
+.get('/ex-1/......', getCollection)
 ```
 
 5. Test it out! You can use either Insomnia or the browser to confirm that yuor endpoint is working.
 
-<img src='../__lecture/assets/ex-2-5.png' />
+<img src='../__lecture/assets/ex-1-2-5.png' />
 
 6. Now let's get the actual data in there! We will have to modigy the `getCollection` function. Fill in the blanks.
 
