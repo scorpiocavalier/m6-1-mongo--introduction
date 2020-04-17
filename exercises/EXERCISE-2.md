@@ -1,6 +1,6 @@
 # Exercise 2 - Hello? Bonjour?
 
-# Exercise 2.1 - Create a Document
+## Exercise 2.1 - Create a Document
 
 As we learned in the last exercise, we don't have to manually create a database or collection. When creating a docuemnt, we pass it the database and the collection, if they exist, the item is added, if they do not, they are created and the item is added.
 
@@ -87,4 +87,6 @@ res.status(500).json({ status: 500, data: req.body, message: err.message });
 11. Time to try it out in Insomnia!
 12. Try to send the same data a second time. Do we get an error? What is it?
 
-... to be continued...
+---
+
+## Exercise 2.2 -
