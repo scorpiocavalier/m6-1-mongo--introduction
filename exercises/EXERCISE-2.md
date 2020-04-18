@@ -1,8 +1,8 @@
 # Exercise 2 - Hello? Bonjour?
 
-## Exercise 2.1 - Create a Document
+## Exercise 2.1 - Create a Document (`insertOne`)
 
-As we learned in the last exercise, we don't have to manually create a database or collection. When creating a docuemnt, we pass it the database and the collection, if they exist, the item is added, if they do not, they are created and the item is added.
+As we learned in the last exercise, we don't have to manually create a database or collection. When creating a document, we pass it the database and the collection, if they exist, the item is added, if they do not, they are created and the item is added.
 
 1. Inside of `📁 exercises`, create a file called `exercise-2.js`
 2. Write a function `createGreeting`.
@@ -86,7 +86,82 @@ res.status(500).json({ status: 500, data: req.body, message: err.message });
 
 11. Time to try it out in Insomnia!
 12. Try to send the same data a second time. Do we get an error? What is it?
+13. Add another item.
+
+```json
+{
+  "lang": "French",
+  "_id": "FR",
+  "hello": "Bonjour"
+}
+```
 
 ---
 
-## Exercise 2.2 -
+## Exercise 2.2 - Add More than One (`insertMany`)
+
+Take a look at [`greetings.json`](../data/greetings.json). It contains data that needs to be transferred to our database. You could copy/paste each one into Insomnia and add them using the function you created in `2.1` but that would a little inefficient.
+
+Instead, let's write a utility function that will migrate all of the data for us.
+
+1. Create a file called `batchImport.js` in the root of the project. This file/function will be called from the terminal and run with `node`.
+2. Add/Install the [`file-system`](https://www.npmjs.com/package/file-system) module.
+3. Require it at the top of the `batchImpotr.js` file.
+4. Declare a variable and assign it the contents of `greetings.json` like so:
+
+```js
+const greetings = JSON.parse(fs.readFileSync('data/greetings.json'));
+```
+
+5. Create an async function called `batchImport`.
+6. For now, let's put in a console.log of the `greetings` variable.
+7. Don't forget to call the function at the bottom of the file.
+8. In the terminal, in VS Code, run the file with `node`. This will print the contents of `greetings.json` in the terminal.
+
+```bash
+node batchImport.js
+```
+
+8.  Add in all of the Mongo stuff! Look back at the other files and copy/paste over the code required for us to connect to the database.
+
+    - Our function will be almost identical to the `createGreeting` function.
+    - _You won't need any of the `req` and `res` stuff. Replace thos with console.logs._
+    - Instead of using `insertOne`, you will use `insertMany`. You will need to change the `assert` a little as well...
+    - `insertMany` accepts an array.
+
+9.  If you got the success message you wrote, you should be good and it should have added all of the data to the database. In `2.3`, we'll confirm this.
+
+## Exercise 2.3 - `find` a greeting
+
+Time to read the data!
+
+1. Create a new `async` function called `getGreeting` in the `exercise-2.js` file.
+2. Add a `res` in there for testing purposes.
+
+```js
+const getGreeting = async (req, res) => {
+  res.status(200).json('bacon');
+};
+```
+
+3. In `server.js`, create a new `get` endpoint that will accept a `url param` called `id`.
+4. Require the function you just wrote.
+
+```js
+.get('ex-2/greeting/:_id', getGreeting)
+```
+
+5. Use Insomnia to test the endpoint. You should get a 'bacon' response...
+6. Declare a variable `_id` to hold `req.param._id`.
+7. Use the `.find` method to retrieve ONE element from the database.
+
+```js
+db.collection('two').findOne({ _id }, (err, result) => {
+  if (result) {
+    res.status(200).json({ status: 200, data: result });
+  } else {
+    res.status(404).json({ status: 404, _id, message: 'Not Found' });
+  }
+  client.close();
+});
+```

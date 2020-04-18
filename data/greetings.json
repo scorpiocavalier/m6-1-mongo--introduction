@@ -121,11 +121,6 @@
     "hello": "Goedendag"
   },
   {
-    "lang": "English",
-    "_id": "EN",
-    "hello": "Hello"
-  },
-  {
     "lang": "Esperanto",
     "_id": "EO"
   },
@@ -144,11 +139,6 @@
   {
     "lang": "Finnish",
     "_id": "FI"
-  },
-  {
-    "lang": "French",
-    "_id": "FR",
-    "hello": "Bonjour"
   },
   {
     "lang": "Frisian",

@@ -2,13 +2,13 @@
 
 const { MongoClient } = require('mongodb');
 
-// create a new client
-const client = new MongoClient('mongodb://localhost:27017', {
-  useUnifiedTopology: true,
-});
-
 const getCollection = async (req, res) => {
   const { dbName, collection } = req.params;
+
+  // create a new client
+  const client = new MongoClient('mongodb://localhost:27017', {
+    useUnifiedTopology: true,
+  });
 
   await client.connect();
 

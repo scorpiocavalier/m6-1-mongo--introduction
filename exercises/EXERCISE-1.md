@@ -28,22 +28,18 @@ Once we start creating databases, they will appear in this list!
 const { MongoClient } = require('mongodb');
 ```
 
-4. Now we want to create the `client` that we will use to connect to the mongo server.
-
-```js
-// create a new client
-const client = new MongoClient('mongodb://localhost:27017', {
-  useUnifiedTopology: true,
-});
-```
-
 5. Now we'll create a function that will
+   - create the `client`
    - connect to the database server
    - create a database called `exercise_one`
    - disconnect from the server
 
 ```js
 const dbFunction = async (dbName) => {
+  // create a new client
+  const client = new MongoClient('mongodb://localhost:27017', {
+    useUnifiedTopology: true,
+  });
   // open the connection to the database server
   await client.connect();
   console.log('connected!');
