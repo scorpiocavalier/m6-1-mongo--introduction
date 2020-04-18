@@ -42,4 +42,10 @@ This is where you'll be able to run commands on the database.
 
 Keep these two terminal windows open. We will connect to the running databases via Node and verify that our interactions are actually successful by querying the db from the second terminal. _Once we move entirely to Node to connect to the db, you can close this window. Only the `mongod` window needs to remain open._
 
+## Start the Node server
+
+```bash
+yarn dev
+```
+
 **Now off to the exercises!!**
