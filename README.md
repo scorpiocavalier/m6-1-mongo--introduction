@@ -10,13 +10,3 @@ This will download the mongodb server that will allow us to run mongodb locally.
 
 - [Mac](setup/mac.md)
 - [Windows](setup/win.md)
-
-### Commands
-
-to be cleaned up
-
-`mongod`
-`mongo`
-`show dbs`
-`use <DB_NAME>`
-`db.<COLLECTION>.find().pretty()`

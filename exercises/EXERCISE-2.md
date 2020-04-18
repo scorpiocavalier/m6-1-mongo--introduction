@@ -131,7 +131,7 @@ node batchImport.js
 
 9.  If you got the success message you wrote, you should be good and it should have added all of the data to the database. In `2.3`, we'll confirm this.
 
-## Exercise 2.3 - `find` a greeting
+## Exercise 2.3 - `findOne()` a greeting
 
 Time to read the data!
 
@@ -153,15 +153,68 @@ const getGreeting = async (req, res) => {
 
 5. Use Insomnia to test the endpoint. You should get a 'bacon' response...
 6. Declare a variable `_id` to hold `req.param._id`.
-7. Use the `.find` method to retrieve ONE element from the database.
+7. Use the `.findOne` method to retrieve ONE element, based on its `_id`, from the database. `.findOne` takes a callback that will handle to handle the result.
+
+_If the element doesn't exist, it will NOT return an error. It will return `null`. So we can add a condition to return the result only if it exists, if not return an error message._
 
 ```js
 db.collection('two').findOne({ _id }, (err, result) => {
-  if (result) {
-    res.status(200).json({ status: 200, data: result });
-  } else {
-    res.status(404).json({ status: 404, _id, message: 'Not Found' });
-  }
+  result
+    ? res.status(200).json({ status: 200, _id, data: result })
+    : res.status(404).json({ status: 404, _id, data: 'Not Found' });
   client.close();
 });
+```
+
+---
+
+## Exercise 2.4 - `find()` more than one greeting
+
+1. Create a new async function in `exercise-2.js`.
+2. Declare the `client`
+3. Connect to the client, etc.
+4. Declare the `db`. _We're still using 'exercises'._
+5. Use `.find()` to get back _all_ of the documents in the 'two' collection.
+6. Use the `.toArray()`.
+7. Be sure to `res`pond appropriately. `find` will return an empty array if it doesn't find anything...
+8. Create a new endpoint: `.get('/ex-2/greeting', getGreetings)`
+9. Call this enpoint from Insomnia. It should return _all_ of the documents in the collection.
+
+Using `.find()` without passing anything to it will return _all_ of the documents in the collection.
+
+It really isn't good practice to return _all_ of the data. What would happen if there were thousands of documents in the collection? 💥
+
+10. Instead let's setup some limits. If a user makes a query like we did just above, they will get only the first 25 documents.
+
+    - Use [`.slice()`](https://www.w3schools.com/jsref/jsref_slice_array.asp).
+    - We will also need to remove the ternary operator and use a proper `if/else` statement.
+
+11. This is better, but we need to allow user to be able to access all of the data.
+12. If a user were to query our server with this `/ex-2/greeting?start=10&limit=10`, they would receive the 10th to the 20th values. Make this possible in your function.
+    - There should also be fallback values if they only provide ony one of the query params, even none...
+13. Finally, if the user requests a range that doesn't exist, is incomplete, we need to handle that. For example, if there are 100 documents, but they ask for `start=90&limit=20`, they should only receive the last 10 and nothing else.
+
+### Stretch goal
+
+Once you've implemented all of 2.4, everything works, but the user might not know if their query was good or not. We could provide them with some additional data in the response to let them know what the received in regards to the data.
+
+For example, if there are only 12 values, but the query is `start=10&limit=5`. We should let the user know that we changed his/her query.
+
+```js
+{
+  "status": 200,
+  "start": 10,
+  "limit": 2,
+  "data": [
+    {
+      "_id": "HI",
+      "lang": "Hindi",
+      "hello": "Namaste"
+    },
+    {
+      "_id": "HU",
+      "lang": "Hungarian"
+    }
+  ]
+}
 ```
