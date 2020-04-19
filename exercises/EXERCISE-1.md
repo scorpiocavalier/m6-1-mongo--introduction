@@ -130,7 +130,7 @@ const getCollection = async (req, res) => {
 .get('/ex-1/......', getCollection)
 ```
 
-5. Test it out! You can use either Insomnia or the browser to confirm that yuor endpoint is working.
+5. Test it out! You can use either Insomnia or the browser to confirm that your endpoint is working.
 
 <img src='../__lecture/assets/ex-1-2-5.png' />
 

@@ -106,7 +106,7 @@ Instead, let's write a utility function that will migrate all of the data for us
 
 1. Create a file called `batchImport.js` in the root of the project. This file/function will be called from the terminal and run with `node`.
 2. Add/Install the [`file-system`](https://www.npmjs.com/package/file-system) module.
-3. Require it at the top of the `batchImpotr.js` file.
+3. Require it at the top of the `batchImport.js` file.
 4. Declare a variable and assign it the contents of `greetings.json` like so:
 
 ```js
@@ -124,7 +124,6 @@ node batchImport.js
 
 8.  Add in all of the Mongo stuff! Look back at the other files and copy/paste over the code required for us to connect to the database.
 
-    - Our function will be almost identical to the `createGreeting` function.
     - _You won't need any of the `req` and `res` stuff. Replace thos with console.logs._
     - Instead of using `insertOne`, you will use `insertMany`. You will need to change the `assert` a little as well...
     - `insertMany` accepts an array.
@@ -144,13 +143,8 @@ const getGreeting = async (req, res) => {
 };
 ```
 
-3. In `server.js`, create a new `get` endpoint that will accept a `url param` called `id`.
+3. In `server.js`, create a new `get` endpoint that will contain a `url param` called `_id`.
 4. Require the function you just wrote.
-
-```js
-.get('ex-2/greeting/:_id', getGreeting)
-```
-
 5. Use Insomnia to test the endpoint. You should get a 'bacon' response...
 6. Declare a variable `_id` to hold `req.param._id`.
 7. Use the `.findOne` method to retrieve ONE element, based on its `_id`, from the database. `.findOne` takes a callback that will handle to handle the result.
