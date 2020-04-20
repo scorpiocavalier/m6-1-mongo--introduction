@@ -34,6 +34,8 @@ const { MongoClient } = require('mongodb');
    - create a database called `exercise_one`
    - disconnect from the server
 
+When creating a `new` client we pass it the url of the database, as well as an options object. I've added an option that will soon become a new defaulta at which point we can remove it completely. (It also prevents us being yelled at in the terminal).
+
 ```js
 const dbFunction = async (dbName) => {
   // create a new client
