@@ -18,7 +18,7 @@ const dbInit = async () => {
 
 const dbClose = () => client.close()
 
-const getCollection = async () => {
+const getUsers = async (req, res) => {
   // create and connect a client, and return the db
   const db = await dbInit()
 
@@ -28,6 +28,11 @@ const getCollection = async () => {
 
   // close the db connection
   dbClose()
+
+  // return users unless empty
+  users
+    ? res.status(200).json(users)
+    : res.status(404).json('Empty collection')
 }
 
-getCollection()
+module.exports = { getUsers }

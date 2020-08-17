@@ -2,26 +2,34 @@ require("dotenv").config()
 const { MONGO_URI } = process.env
 const { MongoClient } = require("mongodb")
 
-const dbFunction = async (dbName) => {
-  // options for MongoClient
-  const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+const dbName = 'exercise_1'
 
-  // create and connect to a MongoClient
-  const client = await MongoClient(MONGO_URI, options).connect()
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
 
-  // connect to the database
-  const db = client.db(dbName)
+let client
+
+const dbInit = async () => {
+  client = await MongoClient(MONGO_URI, options).connect()
+  return client.db(dbName)
+}
+
+const dbClose = () => client.close()
+
+const dbFunction = async () => {
+  // initiate a db
+  const db = await dbInit()
   console.log("connected!")
 
-  // add some data to the db
-  await db.collection('users').insertOne({ name: 'Buck Rogers'})
+  // insert some data to the db
+  await db.collection('users').insertOne({ name: 'Buck Rogers' })
+  console.log('inserted one entry to db')
 
   // close the connection to the dabase server
-  client.close()
+  await dbClose()
   console.log("disconnected!")
 }
 
-dbFunction('exercise_1')
+dbFunction()
