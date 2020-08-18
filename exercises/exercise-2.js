@@ -55,38 +55,6 @@ const handleQuery = (query, size) => {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const createGreeting = async (req, res) => {
-  try {
-    const db = await dbInit()
-
-    const response = await db.collection('greetings').insertOne(req.body)
-    assert.equal(1, response.insertedCount)
-
-    res.status(201).json({ status: 201, data: req.body })
-  } catch (err) {
-    console.log(err.stack)
-    res.status(500).json({ status: 500, data: req.body, message: err.message })
-  }
-
-  dbClose()
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const getGreeting = async (req, res) => {
-  const db = await dbInit()
-  const _id = req.params._id
-
-  db.collection('greetings').findOne({ _id }, (err, result) => {
-    result
-      ? res.status(200).json({ status: 200, data: result, _id })
-      : res.status(404).json({ status: 404, data: err.message, _id })
-    dbClose()
-  })
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 const getAllGreetings = async (req, res) => {
   // get all data from db as an array
   const db = await dbInit()
@@ -113,4 +81,54 @@ const getAllGreetings = async (req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-module.exports = { createGreeting, getGreeting, getAllGreetings }
+const getGreeting = async (req, res) => {
+  const db = await dbInit()
+
+  const _id = req.params._id
+  const criteria = _id.length > 2 ? { lang: _id } : { _id }
+
+  db.collection('greetings').findOne(criteria, (err, result) => {
+    result
+      ? res.status(200).json({ status: 200, data: result, _id })
+      : res.status(404).json({ status: 404, data: err.message, _id })
+    dbClose()
+  })
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const createGreeting = async (req, res) => {
+  try {
+    const db = await dbInit()
+
+    const response = await db.collection('greetings').insertOne(req.body)
+    assert.equal(1, response.insertedCount)
+
+    res.status(201).json({ status: 201, data: req.body, message: 'Added!' })
+  } catch (err) {
+    console.log(err.stack)
+    res.status(500).json({ status: 500, data: req.body, message: err.message })
+  }
+
+  dbClose()
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const deleteGreeting = async (req, res) => {
+  try {
+    const db = await dbInit()
+
+    const response = await db.collection('greetings').deleteOne(req.body);
+    assert.equal(1, response.deletedCount);
+
+    res.status(204).json({ status: 204 })
+  } catch (err) {
+    console.log(err.stack)
+    res.status(500).json({ status: 500, data: req.body, message: err.message })
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+module.exports = { getAllGreetings, getGreeting, createGreeting, deleteGreeting }
