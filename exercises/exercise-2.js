@@ -32,11 +32,15 @@ const handleQuery = (query, size) => {
   console.log('limit', limit)
 
   // if start is not valid, assign default value of 0
-  start = (start === null || start < 1 || start > size) ? 0 : start - 1
+  start = (start !== NaN || start < 1 || start > size)
+    ? 0
+    : start - 1
 
   // limit is the smaller between 25, limit and remainder
   const remainder = size - start
-  limit = (limit < 1 || limit > 25) ? Math.min(25, remainder) : limit
+  limit = (limit !== NaN || limit < 1 || limit > 25)
+    ? Math.min(25, remainder)
+    : limit
 
   // endbound for slicing
   const end = start + limit
