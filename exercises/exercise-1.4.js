@@ -13,7 +13,7 @@ let client
 
 const dbInit = async () => {
   client = await MongoClient(MONGO_URI, options).connect()
-  return client.db()
+  return client.db(dbName)
 }
 
 const dbClose = () => client.close()
