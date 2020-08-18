@@ -119,8 +119,8 @@ const deleteGreeting = async (req, res) => {
   try {
     const db = await dbInit()
 
-    const response = await db.collection('greetings').deleteOne(req.body);
-    assert.equal(1, response.deletedCount);
+    const response = await db.collection('greetings').deleteOne(req.body)
+    assert.equal(1, response.deletedCount)
 
     res.status(204).json({ status: 204 })
   } catch (err) {
@@ -131,4 +131,39 @@ const deleteGreeting = async (req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-module.exports = { getAllGreetings, getGreeting, createGreeting, deleteGreeting }
+const updateGreeting = async (req, res) => {
+  try {
+    const db = await dbInit()
+
+    const { _id } = req.params
+    const { hello } = req.body
+
+    if (hello) {
+      const queryObj = { _id }
+      const newObj = { $set: { hello } }
+
+      const response = await db.collection('greetings').updateOne(queryObj, newObj)
+      assert.equal(1, response.matchedCount)
+      assert.equal(1, response.modifiedCount)
+
+      res.status(200).json({ status: 200, data: { hello }, message: "Hello has been updated." })
+    } else {
+      res.status(400).json({ status: 400, data: { hello }, message: "Hello is empty."})
+    }
+  } catch (err) {
+    console.log(err.stack)
+    res.status(500).json({ status: 500, data: req.body, message: err.message })
+  }
+
+  dbClose()
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+module.exports = {
+  getAllGreetings,
+  getGreeting,
+  createGreeting,
+  deleteGreeting,
+  updateGreeting
+}
