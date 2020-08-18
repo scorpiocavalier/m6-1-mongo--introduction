@@ -3,21 +3,53 @@ const { MONGO_URI } = process.env
 const { MongoClient } = require('mongodb')
 const assert = require('assert')
 
-const dbName = 'exercise_1'
-
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}
+///////////////////////////////////////////////////////////////////////////////
 
 let client
 
 const dbInit = async () => {
+  const dbName = 'exercise_1'
+
+  const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+
   client = await MongoClient(MONGO_URI, options).connect()
   return client.db(dbName)
 }
 
 const dbClose = () => client.close()
+
+///////////////////////////////////////////////////////////////////////////////
+
+const handleQuery = (query, size) => {
+  // query values
+  let start = Number(query.start)
+  let limit = Number(query.limit)
+  console.log('\n...starting values...')
+  console.log('start', start)
+  console.log('limit', limit)
+
+  // if start is not valid, assign default value of 0
+  start = (start === null || start < 1 || start > size) ? 0 : start - 1
+
+  // limit is the smaller between 25, limit and remainder
+  const remainder = size - start
+  limit = (limit < 1 || limit > 25) ? Math.min(25, remainder) : limit
+
+  // endbound for slicing
+  const end = start + limit
+
+  // console log final values
+  console.log('\n...final values...')
+  console.log('start', start)
+  console.log('limit', limit)
+
+  return { start, end, limit }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 const createGreeting = async (req, res) => {
   try {
@@ -35,9 +67,11 @@ const createGreeting = async (req, res) => {
   dbClose()
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 const getGreeting = async (req, res) => {
-  const _id = req.params._id
   const db = await dbInit()
+  const _id = req.params._id
 
   db.collection('greetings').findOne({ _id }, (err, result) => {
     result
@@ -47,5 +81,32 @@ const getGreeting = async (req, res) => {
   })
 }
 
+///////////////////////////////////////////////////////////////////////////////
 
-module.exports = { createGreeting, getGreeting }
+const getAllGreetings = async (req, res) => {
+  // get all data from db as an array
+  const db = await dbInit()
+  const response = await db.collection('greetings').find().toArray()
+
+  // slice the data unless empty
+  if (response) {
+    // validate query parameters
+    const { start, end, limit } = handleQuery(req.query, response.length)
+
+    // slice the data
+    let data = response.slice(start, end)
+    console.log('\ndata', data)
+
+    const result = { status: 200, start, limit, data }
+
+    res.status(200).json(result)
+  } else {
+    res.status(404).json({ status: 404, data: "Not Found" })
+  }
+
+  dbClose()
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+module.exports = { createGreeting, getGreeting, getAllGreetings }
