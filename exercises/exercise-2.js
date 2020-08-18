@@ -35,4 +35,17 @@ const createGreeting = async (req, res) => {
   dbClose()
 }
 
-module.exports = { createGreeting }
+const getGreeting = async (req, res) => {
+  const _id = req.params._id
+  const db = await dbInit()
+
+  db.collection('greetings').findOne({ _id }, (err, result) => {
+    result
+      ? res.status(200).json({ status: 200, data: result, _id })
+      : res.status(404).json({ status: 404, data: err.message, _id })
+    dbClose()
+  })
+}
+
+
+module.exports = { createGreeting, getGreeting }
